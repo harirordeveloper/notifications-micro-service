@@ -1,3 +1,12 @@
+require 'logger'
+
+module KafkaLogger
+  def self.logger
+    @logger ||= Logger.new("#{Rails.root}/log/kafka.log")
+  end
+end
+
+
 class KafkaService
 
   KAFKA_BROKERS = ENV['KAFKA_BROKERS'].split(',')
@@ -9,6 +18,7 @@ class KafkaService
     sasl_plain_username: KAFKA_CLUSTER_USERNAME,
     sasl_plain_password: KAFKA_CLUSTER_PASSWORD,
     client_id: 'notification-management',
+    logger: KafkaLogger.logger,
     socket_timeout: 60 # Socket timeout in seconds
   )
 
@@ -18,7 +28,7 @@ class KafkaService
     sasl_plain_username: KAFKA_CLUSTER_USERNAME,
     sasl_plain_password: KAFKA_CLUSTER_PASSWORD,
     client_id: 'notification-management',
-    logger: Rails.logger,
+    logger: KafkaLogger.logger,
     socket_timeout: 60 # Socket timeout in seconds
   )
 
